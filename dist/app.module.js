@@ -28,7 +28,7 @@ exports.AppModule = AppModule = __decorate([
                 username: process.env.PG_USER,
                 password: process.env.PG_PASSWORD,
                 database: process.env.PG_DB,
-                entities: [__dirname + '/**/*.entity{.ts,.js}'],
+                entities: [__dirname + "/**/*.entity{.ts,.js}"],
                 synchronize: true,
             }),
         ],
