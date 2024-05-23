@@ -89,7 +89,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "delete", null);
 exports.UsersController = UsersController = __decorate([
-    (0, common_1.Controller)("users"),
+    (0, common_1.Controller)("user"),
     __metadata("design:paramtypes", [users_service_1.UsersService,
         config_1.ConfigService])
 ], UsersController);

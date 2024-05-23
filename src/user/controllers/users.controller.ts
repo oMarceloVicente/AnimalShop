@@ -9,14 +9,20 @@ import {
   Query,
   ParseIntPipe,
   ValidationPipe,
+  HttpException,
+  HttpStatus,
 } from "@nestjs/common";
 import { UsersService } from "../services/users.service";
 import { User } from "../entities/user.entity";
 import { CreateUserDto } from "../dto/create-user.dto";
+import { ConfigService } from "@nestjs/config";
 
-@Controller("users")
+@Controller("user")
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private configService: ConfigService
+  ) {}
 
   @Get() // GET/users or /users?role=value
   findAll() {
@@ -29,11 +35,27 @@ export class UsersController {
   }
 
   @Post() //POST/users
-  create(
+  async create(
     @Body()
     createUserDto: CreateUserDto
   ) {
-    return this.usersService.create(createUserDto);
+    if (createUserDto.secret !== this.configService.get("AUTH_SECRET")) {
+      throw new HttpException("Wrong secret provided", HttpStatus.FORBIDDEN);
+    }
+
+    const user = await this.usersService.create(createUserDto);
+    if (user) {
+      return {
+        statusCode: 200,
+        message: "User created successfully",
+        data: user,
+      };
+    } else {
+      throw new HttpException(
+        "Failed to create user",
+        HttpStatus.UNPROCESSABLE_ENTITY
+      );
+    }
   }
 
   @Put(":id") //PATH/users/:id
